@@ -74,7 +74,22 @@ async function run() {
       } catch (error) {
         res.status(500).json('Failed to get properties', error)
       }
-    })
+    });
+    app.delete('/properties/:id', async (req, res) => {
+      const id = req.params.id;
+      try {
+          const query = { _id: new ObjectId(id) };
+          const result = await PropertyCollection.deleteOne(query);
+  
+          if (result.deletedCount === 0) {
+              return res.status(404).json({ message: "property not found" });
+          }
+  
+          res.status(200).json(result);
+      } catch (error) {
+          res.status(500).json({ message: "Failed to delete property" });
+      }
+  });
     // property details
     app.get('/properties/:id', async (req, res) => {
       try {
@@ -121,6 +136,25 @@ async function run() {
       }
     });
 
+    // delete agents
+
+    app.delete('/agents/:id', async (req, res) => {
+      const id = req.params.id;
+      try {
+          const query = { _id: new ObjectId(id) };
+          const result = await agentCollection.deleteOne(query);
+  
+          if (result.deletedCount === 0) {
+              return res.status(404).json({ message: "Agent not found" });
+          }
+  
+          res.status(200).json(result);
+      } catch (error) {
+          res.status(500).json({ message: "Failed to delete agent" });
+      }
+  });
+  
+
     // User added in database
 
     app.post('/users', async (req, res) => {
@@ -153,6 +187,22 @@ async function run() {
         res.status(500).json('Failed to get user:', error)
       }
     });
+
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      try {
+          const query = { _id: new ObjectId(id) };
+          const result = await userCollection.deleteOne(query);
+  
+          if (result.deletedCount === 0) {
+              return res.status(404).json({ message: "user not found" });
+          }
+  
+          res.status(200).json(result);
+      } catch (error) {
+          res.status(500).json({ message: "Failed to delete user" });
+      }
+  });
 
 
     app.post('/contacts', async (req, res) => {
